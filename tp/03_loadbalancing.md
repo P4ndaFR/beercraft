@@ -26,18 +26,17 @@ Ajoutez ceci :
 
 ```
 [loadbalancer]
-lb ansible_host=IP_DU_LOADBALANCER ansible_user=ubuntu
+lb ansible_host=iaas-<N>-1.beercraft.cloud ansible_user=ubuntu
 
 [appservers]
-app1 ansible_host=IP_SERVEUR_APP_1 ansible_user=ubuntu
-app2 ansible_host=IP_SERVEUR_APP_2 ansible_user=ubuntu
+app1 ansible_host=iaas-<N>-2.beercraft.cloud ansible_user=ubuntu
+app2 ansible_host=iaas-<N>-3.beercraft.cloud ansible_user=ubuntu
 
 [all:vars]
 ansible_python_interpreter=/usr/bin/python3
 ```
 
-Remplacez `IP_DU_LOADBALANCER`, `IP_SERVEUR_APP_1` et `IP_SERVEUR_APP_2` par les IP réelles de vos machines.
-
+> Remplacez \<N\> par le numéro qui vous a été attribué en début de séance
 ---
 
 ## **2️⃣ Créer le Playbook pour les serveurs d’application**
@@ -53,20 +52,18 @@ Ajoutez ceci :
 - hosts: appservers
   become: yes
   tasks:
-    - name: Mettre à jour le système
+    - name: Mettre à jour les dépots
       apt:
         update_cache: yes
-        upgrade: yes
 
     - name: Installer Node.js et PM2
       shell: |
-        curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
         apt install -y nodejs
         npm install -g pm2
 
     - name: Cloner le dépôt Beercraft
       git:
-        repo: 'https://github.com/VOTRE_REPO_GIT/beercraft.git'
+        repo: 'https://github.com/P4ndaFR/beercraft.git'
         dest: /home/ubuntu/beercraft
         version: main
 
@@ -78,7 +75,7 @@ Ajoutez ceci :
     - name: Démarrer l'application avec PM2
       shell: |
         cd /home/ubuntu/beercraft
-        pm2 start server.js --name beercraft
+        pm2 start index.js --name beercraft --no-autorestart
         pm2 startup
         pm2 save
 ```
@@ -105,18 +102,18 @@ Ajoutez ceci :
 
     - name: Configurer Nginx comme Load Balancer
       copy:
-        dest: /etc/nginx/sites-available/default
+        dest: /etc/nginx/sites-available/beercraft
         content: |
           upstream beercraft {
-              server IP_SERVEUR_APP_1:3000;
-              server IP_SERVEUR_APP_2:3000;
+              server iaas-<N>-2.beercraft.cloud:3000;
+              server iaas-<N>-3.beercraft.cloud:3000;
           }
 
           server {
               listen 80;
 
               location / {
-                  proxy_pass http://beercraft;
+                  proxy_pass http://iaas-<N>-1.beercraft.cloud;
                   proxy_set_header Host $host;
                   proxy_set_header X-Real-IP $remote_addr;
                   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -129,7 +126,7 @@ Ajoutez ceci :
         state: restarted
 ```
 
-Remplacez `IP_SERVEUR_APP_1` et `IP_SERVEUR_APP_2` par leurs adresses IP respectives.
+> Remplacez \<N\> par le numéro qui vous a été attribué en début de séance
 
 ---
 
@@ -138,16 +135,23 @@ Ajoutez vos serveurs à `~/.ssh/config` pour un accès facile :
 
 ```bash
 Host lb
-    HostName IP_DU_LOADBALANCER
+    HostName iaas-<N>-1.beercraft.cloud
     User ubuntu
 
 Host app1
-    HostName IP_SERVEUR_APP_1
+    HostName iaas-<N>-2.beercraft.cloud
     User ubuntu
 
 Host app2
-    HostName IP_SERVEUR_APP_2
+    HostName iaas-<N>-3.beercraft.cloud
     User ubuntu
+```
+
+> Remplacez \<N\> par le numéro qui vous a été attribué en début de séance
+
+Désactivez la verification de la clé :
+```
+export ANSIBLE_HOST_KEY_CHECKING=False
 ```
 
 Vérifiez la connexion SSH :
@@ -169,8 +173,9 @@ ansible-playbook -i inventory.ini loadbalancer.yml
 Accédez à l’IP du Load Balancer dans un navigateur :
 
 ```
-http://IP_DU_LOADBALANCER
+http://iaas-<N>-1.beercraft.cloud
 ```
+> Remplacez \<N\> par le numéro qui vous a été attribué en début de séance
 
 Vous devriez voir votre application Beercraft fonctionner, équilibrée entre les deux serveurs d'application !
 

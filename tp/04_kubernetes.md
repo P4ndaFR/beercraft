@@ -1,7 +1,3 @@
-Voici la version mise à jour du tutoriel avec l’URL de l’application sous la forme **n.kubernetes.beercraft.cloud**, où chaque utilisateur doit remplacer **N** par le numéro qui lui a été attribué.
-
----
-
 ### 📌 **Prérequis**
 Avant de commencer, assurez-vous d’avoir :
 - Un cluster **Kubernetes** opérationnel (**AKS, GKE, EKS, Kind, etc.**).
@@ -55,9 +51,9 @@ spec:
     spec:
       containers:
         - name: beercraft
-          image: dockerhubuser/beercraft:latest  # Remplacez par l'image réelle
+          image: p4ndafr/beercraft:latest
           ports:
-            - containerPort: 80
+            - containerPort: 3000
 ```
 
 Appliquer le fichier :
@@ -84,8 +80,8 @@ spec:
     app: beercraft
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 80
+      port: 3000
+      targetPort: 3000
 ```
 
 Appliquer le fichier :
@@ -121,7 +117,7 @@ spec:
               service:
                 name: beercraft-service
                 port:
-                  number: 80
+                  number: 3000
 ```
 
 Appliquer le fichier :

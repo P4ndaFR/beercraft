@@ -18,14 +18,18 @@ Avant de commencer, assurez-vous d’avoir :
 Connectez-vous à votre serveur via SSH :
 
 ```bash
-ssh user@votre-ip-ou-domaine
+ssh ubuntu@iaas-<N>-1.beercraft.cloud
 ```
+
+> Remplacez \<N\> par le numéro qui vous a été attribué en début de séance
 
 Si vous utilisez une clé SSH :
 
 ```bash
-ssh -i /chemin/vers/votre/clé.pem user@votre-ip-ou-domaine
+ssh -i /chemin/vers/votre/clé.pem ubuntu@iaas-<N>-1.beercraft.cloud
 ```
+
+> Remplacez \<N\> par le numéro qui vous a été attribué en début de séance
 
 ---
 
@@ -63,8 +67,8 @@ npm -v
 Si votre code est sur GitHub, clonez-le dans le répertoire souhaité :
 
 ```bash
-git clone https://github.com/votre-repo.git
-cd votre-repo
+git clone https://github.com/P4ndaFR/beercraft.git
+cd beercraft
 ```
 
 Installez les dépendances :
@@ -74,7 +78,7 @@ npm install
 
 Testez votre application localement :
 ```bash
-node app.js
+npm start
 ```
 Si votre application utilise Express, vous verrez quelque chose comme :
 ```
@@ -93,7 +97,7 @@ sudo npm install -g pm2
 
 Lancez l’application :
 ```bash
-pm2 start app.js --name mon-app
+pm2 start index.js --name beercraft
 ```
 
 Vérifiez que l’application fonctionne :
@@ -113,20 +117,20 @@ pm2 save
 ### Installer Nginx
 ```bash
 sudo apt install nginx  # Ubuntu/Debian
-sudo yum install nginx  # CentOS
+sudo yum install nginx> Remplacez \<N\> par le numéro qui vous a été attribué en début de séance  # CentOS
 ```
 
 ### Configurer un hôte virtuel
 Créez un fichier de configuration Nginx :
 ```bash
-sudo nano /etc/nginx/sites-available/mon-app
+sudo nano /etc/nginx/sites-available/beercraft
 ```
 
 Ajoutez la configuration suivante :
 ```nginx
 server {
     listen 80;
-    server_name votre-domaine.com;
+    server_name iaas-<N>-1.beercraft.cloud;
 
     location / {
         proxy_pass http://127.0.0.1:3000;
@@ -139,9 +143,11 @@ server {
 }
 ```
 
+> Remplacez \<N\> par le numéro qui vous a été attribué en début de séance
+
 Activez la configuration :
 ```bash
-sudo ln -s /etc/nginx/sites-available/mon-app /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/beercraft /etc/nginx/sites-enabled/
 sudo nginx -t  # Vérifier s’il y a des erreurs
 sudo systemctl restart nginx
 ```
@@ -158,8 +164,10 @@ sudo apt install certbot python3-certbot-nginx
 
 Générez le certificat SSL :
 ```bash
-sudo certbot --nginx -d votre-domaine.com
+sudo certbot --nginx -d iaas-<N>-1.beercraft.cloud
 ```
+
+> Remplacez \<N\> par le numéro qui vous a été attribué en début de séance
 
 Renouvelez automatiquement les certificats :
 ```bash
@@ -171,7 +179,7 @@ sudo certbot renew --dry-run
 ## 📌 Étape 7 : Vérification et monitoring
 Vérifiez que votre application fonctionne :
 ```bash
-curl -I http://votre-domaine.com
+curl -I https://iaas-<N>-1.beercraft.cloud
 ```
 
 Si vous rencontrez des problèmes, consultez les logs :
