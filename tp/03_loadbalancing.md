@@ -58,7 +58,7 @@ Ajoutez ceci :
 
     - name: Installer Node.js et PM2
       shell: |
-        apt install -y nodejs
+        apt install -y nodejs npm
         npm install -g pm2
 
     - name: Cloner le dépôt Beercraft
