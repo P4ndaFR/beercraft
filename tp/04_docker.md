@@ -49,6 +49,16 @@ CMD ["npm", "start"]
    ```sh
    docker build -t beercraft .
    ```
+   Si vous avez un problème avec `Docker` sur Ubuntu, installer sur un Windows. Vous pouvez effectuer les commande suivantes :
+   Installe docker :
+   ```sh
+   sudo apt install docker.io
+   ```
+   Active le service docker :
+   ```sh
+   sudo /etc/init.d/docker start
+   ```
+
 2. **Lancer le conteneur :**
    ```sh
    docker run -d -p 3000:3000 --name beercraft beercraft
