@@ -26,7 +26,7 @@ mv chemin/vers/kubeconfig.yml ~/.kube/config
 Soit le passer en argument au programme :
 
 ```sh
-kubectl --kubeconfig chemin/vers/kubeconfig.yml
+export KUBECONFIG=chemin/vers/kubeconfig.yml
 ```
 
 > **⚠️ Attention:** Ne pas oublier d'ajouter ce paramètre dans la suite du TP si on passe le kubeconfig en paramètre.  
