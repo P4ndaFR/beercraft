@@ -6,6 +6,32 @@ Avant de commencer, assurez-vous d’avoir :
 - Un accès à **Docker Hub** pour récupérer l’image.
 - Un **numéro unique N** attribué pour personnaliser votre déploiement.
 
+**Installation `kubectl` :**
+
+On peut installer kubectl de cette manière *([doc kubernetes](https://kubernetes.io/fr/docs/tasks/tools/install-kubectl/))*:
+
+```sh
+curl -LO https://dl.k8s.io/release/$(curl -Ls https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl
+chmod u+x kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl
+```
+
+L'executable `kubectl` nécessite une configuration *(`kubeconfig.yml` envoyé par mail)*.  
+Pour passer ce fichier de configuration au programme, il faut soit la déplacer vers `~/.kube/config` *(configuration par défaut)* :
+
+```sh
+mv chemin/vers/kubeconfig.yml ~/.kube/config
+```
+
+Soit le passer en argument au programme :
+
+```sh
+export KUBECONFIG=chemin/vers/kubeconfig.yml
+```
+
+> **⚠️ Attention:** Ne pas oublier d'ajouter ce paramètre dans la suite du TP si on passe le kubeconfig en paramètre.  
+On considère pour la suite que cette configuration est la configuration par défaut.
+
 ---
 
 ## 🚀 **Étape 1 : Créer un Namespace personnalisé**

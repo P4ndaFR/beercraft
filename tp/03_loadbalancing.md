@@ -5,6 +5,8 @@ Voici un tutoriel détaillé expliquant comment déployer Beercraft sur trois ma
   
 Ce tutoriel vous guidera étape par étape pour automatiser la configuration avec Ansible.
 
+> **📝 Info :** Les étapes 1️⃣ à 4️⃣ sont à faire sur votre poste local !
+
 ---
 
 ### 📜 **Prérequis**
@@ -58,7 +60,7 @@ Ajoutez ceci :
 
     - name: Installer Node.js et PM2
       shell: |
-        apt install -y nodejs
+        apt install -y nodejs npm
         npm install -g pm2
 
     - name: Cloner le dépôt Beercraft
@@ -111,9 +113,10 @@ Ajoutez ceci :
 
           server {
               listen 80;
+              server_name iaas-<N>-1.beercraft.cloud;
 
               location / {
-                  proxy_pass http://iaas-<N>-1.beercraft.cloud;
+                  proxy_pass http://beercraft;
                   proxy_set_header Host $host;
                   proxy_set_header X-Real-IP $remote_addr;
                   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -170,6 +173,12 @@ ansible-playbook -i inventory.ini loadbalancer.yml
 ---
 
 ## **5️⃣ Tester le déploiement**
+Lancer la commande suivante sur le serveur du Load Balancer pour vérifier que celui-ci redirige bien les requêtes :
+
+```
+sudo tcpdump dst port 3000
+```
+
 Accédez à l’IP du Load Balancer dans un navigateur :
 
 ```
